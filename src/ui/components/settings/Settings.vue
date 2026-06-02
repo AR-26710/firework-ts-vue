@@ -116,9 +116,21 @@
 						<button type="button" class="setting__shortcuts-btn" @click="openHelp('shortcuts')">
 							{{ $t('setting.shortcuts') }}
 						</button>
+						<button type="button" class="setting__reset-btn" @click="handleReset">
+							{{ $t('setting.resetSettings') }}
+						</button>
 					</div>
 				</div>
 			</div>
+			<ConfirmDialog
+				:visible="showConfirmDialog"
+				:title="$t('setting.resetSettings')"
+				:message="$t('setting.resetConfirm')"
+				:confirm-text="$t('setting.resetConfirmBtn')"
+				:cancel-text="$t('setting.resetCancelBtn')"
+				@confirm="confirmReset"
+				@cancel="cancelReset"
+			/>
 		</div>
 	</Transition>
 </template>
@@ -131,12 +143,14 @@ import DisplayTab from './DisplayTab.vue';
 import BehaviorTab from './BehaviorTab.vue';
 import TextFireworkTab from './TextFireworkTab.vue';
 import LanguageTab from './LanguageTab.vue';
+import ConfirmDialog from '@/ui/components/common/ConfirmDialog.vue';
 
 const state = useStore();
 const actions = useActions();
 
 const tabs = ['display', 'firework', 'textFirework', 'language'] as const;
 const activeTab = ref<(typeof tabs)[number]>('display');
+const showConfirmDialog = ref(false);
 
 function onKeydown(e: KeyboardEvent) {
 	if (!state.settingOpen) return;
@@ -165,6 +179,19 @@ function onClosesetting() {
 
 function openHelp(topic: string) {
 	actions.setState({ openHelpTopic: topic });
+}
+
+function handleReset() {
+	showConfirmDialog.value = true;
+}
+
+function confirmReset() {
+	actions.resetConfig();
+	showConfirmDialog.value = false;
+}
+
+function cancelReset() {
+	showConfirmDialog.value = false;
 }
 </script>
 
@@ -330,9 +357,12 @@ function openHelp(topic: string) {
 		margin-top: $space-3;
 		padding-top: $space-3;
 		border-top: 1px solid $border-subtle;
+		display: flex;
+		gap: $space-2;
 	}
 
-	&__shortcuts-btn {
+	&__shortcuts-btn,
+	&__reset-btn {
 		outline: none;
 		border: 1px solid $border-strong;
 		border-radius: $radius-md;
@@ -360,6 +390,18 @@ function openHelp(topic: string) {
 		&:focus-visible {
 			outline: 2px solid $primary;
 			outline-offset: 2px;
+		}
+	}
+
+	&__reset-btn {
+		color: $text-tertiary;
+		border-color: $border-subtle;
+
+		&:hover,
+		&:active,
+		&:focus {
+			color: $text-primary;
+			border-color: $border-hover;
 		}
 	}
 

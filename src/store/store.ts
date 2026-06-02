@@ -129,6 +129,32 @@ function isFullscreen(): boolean {
 }
 
 /**
+ * 获取默认配置对象。
+ * @returns {StoreConfig} 默认配置对象
+ */
+function getDefaultConfig(): StoreConfig {
+	return {
+		quality: String(IS_HIGH_END_DEVICE ? QUALITY_HIGH : QUALITY_NORMAL),
+		shell: 'Random',
+		size: IS_DESKTOP ? '3' : IS_HEADER ? '1.2' : '2',
+		autoLaunch: true,
+		finale: false,
+		skyLighting: SKY_LIGHT_NORMAL + '',
+		hideControls: IS_HEADER,
+		hideToast: false,
+		longExposure: false,
+		scaleFactor: getDefaultScaleFactor(),
+		textFirework: false,
+		textRandomColor: false,
+		textDisplayCount: 6,
+		textRandomPosition: false,
+		textRandomPositionShuffle: false,
+		textSingleCluster: false,
+		launchSequence: 'Random',
+	};
+}
+
+/**
  * 应用状态存储单例对象。
  * 管理应用的全部运行时状态和用户配置，提供状态变更通知和持久化能力。
  * 初始化时根据设备类型设置默认配置，非头部嵌入模式下自动加载持久化数据。
@@ -153,25 +179,7 @@ const store: Store = {
 		settingOpen: false,
 		openHelpTopic: null,
 		fullscreen: isFullscreen(),
-		config: {
-			quality: String(IS_HIGH_END_DEVICE ? QUALITY_HIGH : QUALITY_NORMAL),
-			shell: 'Random',
-			size: IS_DESKTOP ? '3' : IS_HEADER ? '1.2' : '2',
-			autoLaunch: true,
-			finale: false,
-			skyLighting: SKY_LIGHT_NORMAL + '',
-			hideControls: IS_HEADER,
-			hideToast: false,
-			longExposure: false,
-			scaleFactor: getDefaultScaleFactor(),
-			textFirework: false,
-			textRandomColor: false,
-			textDisplayCount: 6,
-			textRandomPosition: false,
-			textRandomPositionShuffle: false,
-			textSingleCluster: false,
-			launchSequence: 'Random',
-		},
+		config: getDefaultConfig(),
 	},
 
 	/**
@@ -260,6 +268,6 @@ if (!IS_HEADER) {
 	store.load();
 }
 
-export { store };
+export { store, getDefaultConfig };
 
 export type { StoreState, StoreConfig };

@@ -24,6 +24,11 @@ export default {
 		finaleMode: 'Finale Mode',
 		launchSequence: 'Launch Sequence',
 		shortcuts: 'Shortcuts',
+		resetSettings: 'Reset Settings',
+		resetConfirm:
+			'Are you sure you want to reset all settings? This will restore all configurations to default values.',
+		resetConfirmBtn: 'Reset',
+		resetCancelBtn: 'Cancel',
 		credits: "Forked from {link1}'s {link2}.",
 		language: 'Language',
 		graphicsGroup: 'Graphics',

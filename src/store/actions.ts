@@ -5,7 +5,7 @@
  */
 
 import { fscreen } from '@/core/fscreen';
-import { store } from './store';
+import { store, getDefaultConfig } from './store';
 import { setQuality } from '@/core/state';
 import { qualitySelector, canPlaySoundSelector } from './selectors';
 import type { StoreConfig, StoreState } from './store';
@@ -120,12 +120,23 @@ function configDidUpdate() {
 	setQuality(qualitySelector());
 }
 
+/**
+ * 重置所有配置为默认值。
+ */
+function resetConfig() {
+	store.setState({
+		config: getDefaultConfig(),
+	});
+	configDidUpdate();
+}
+
 export {
 	togglePause,
 	toggleSound,
 	toggleSetting,
 	toggleFullscreen,
 	updateConfig,
+	resetConfig,
 	configDidUpdate,
 	fullscreenEnabled,
 	isFullscreen,

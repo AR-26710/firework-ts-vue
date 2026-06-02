@@ -12,6 +12,7 @@ import {
 	toggleSetting,
 	toggleFullscreen,
 	updateConfig,
+	resetConfig,
 } from '@/store/actions';
 import type { StoreState } from '@/store/store';
 
@@ -45,6 +46,7 @@ export function useActions() {
 		toggleSetting,
 		toggleFullscreen,
 		updateConfig,
+		resetConfig,
 		setState: store.setState.bind(store),
 	};
 }
