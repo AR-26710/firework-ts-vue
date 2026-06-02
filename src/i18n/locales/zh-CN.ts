@@ -59,6 +59,9 @@ export default {
 		Ring: '圆环',
 		Strobe: '频闪',
 		Willow: '垂柳',
+		Brocade: '锦冠',
+		Peony: '牡丹',
+		Kamuro: '冠',
 	},
 	launchSequenceLabels: {
 		Random: '随机',
@@ -67,6 +70,8 @@ export default {
 		Triple: '三连发',
 		Pyramid: '金字塔',
 		'Small Barrage': '小型弹幕',
+		Wave: '波浪',
+		'Cross Burst': '十字爆发',
 	},
 	shuffleOption: {
 		ordered: '不打乱',
@@ -103,7 +108,7 @@ export default {
 		},
 		launchSequence: {
 			header: '发射序列',
-			body: '选择烟花的发射编排方式。"随机"会按概率混合各种序列；"单发"每次发射一枚烟花；"双发"同时发射两枚；"三连发"中央先发再左右各一发；"金字塔"从两侧向中央依次发射形成金字塔形状；"小型弹幕"以中央为起点向两侧对称扩展发射形成扇形效果。',
+			body: '选择烟花的发射编排方式。"随机"会按概率混合各种序列；"单发"每次发射一枚烟花；"双发"同时发射两枚；"三连发"中央先发再左右各一发；"金字塔"从两侧向中央依次发射形成金字塔形状；"小型弹幕"以中央为起点向两侧对称扩展发射形成扇形效果；"波浪"从一侧向另一侧依次发射形成波浪扫过天空的效果；"十字爆发"五发烟花呈十字形排列发射。',
 		},
 		hideControls: {
 			header: '隐藏控制',

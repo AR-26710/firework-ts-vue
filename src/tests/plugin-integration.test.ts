@@ -23,9 +23,10 @@ describe('Plugin System Integration', () => {
 	});
 
 	describe('内置烟花类型插件', () => {
-		it('应注册所有 12 种内置烟花类型', () => {
+		it('应注册所有 15 种内置烟花类型', () => {
 			const names = getShellNames();
 			expect(names).toContain('Random');
+			expect(names).toContain('Brocade');
 			expect(names).toContain('Crackle');
 			expect(names).toContain('Crossette');
 			expect(names).toContain('Crysanthemum');
@@ -33,11 +34,13 @@ describe('Plugin System Integration', () => {
 			expect(names).toContain('Floral');
 			expect(names).toContain('Ghost');
 			expect(names).toContain('Horse Tail');
+			expect(names).toContain('Kamuro');
 			expect(names).toContain('Palm');
+			expect(names).toContain('Peony');
 			expect(names).toContain('Ring');
 			expect(names).toContain('Strobe');
 			expect(names).toContain('Willow');
-			expect(names.length).toBe(12);
+			expect(names.length).toBe(15);
 		});
 
 		it('Random 应排在首位', () => {
@@ -61,24 +64,28 @@ describe('Plugin System Integration', () => {
 			}
 		});
 
-		it('快速烟花黑名单应包含 Falling Leaves、Floral 和 Willow', () => {
+		it('快速烟花黑名单应包含 Falling Leaves、Floral、Willow、Kamuro 和 Brocade', () => {
 			const blacklist = getFastShellBlacklist();
 			expect(blacklist).toContain('Falling Leaves');
 			expect(blacklist).toContain('Floral');
 			expect(blacklist).toContain('Willow');
+			expect(blacklist).toContain('Kamuro');
+			expect(blacklist).toContain('Brocade');
 		});
 	});
 
 	describe('内置发射序列插件', () => {
-		it('应注册所有 6 种内置发射序列', () => {
+		it('应注册所有 8 种内置发射序列', () => {
 			const names = getSequenceNames();
 			expect(names).toContain('Random');
-			expect(names).toContain('Single');
+			expect(names).toContain('Cross Burst');
 			expect(names).toContain('Double');
-			expect(names).toContain('Triple');
 			expect(names).toContain('Pyramid');
+			expect(names).toContain('Single');
 			expect(names).toContain('Small Barrage');
-			expect(names.length).toBe(6);
+			expect(names).toContain('Triple');
+			expect(names).toContain('Wave');
+			expect(names.length).toBe(8);
 		});
 
 		it('Random 序列应排在首位', () => {
@@ -89,8 +96,8 @@ describe('Plugin System Integration', () => {
 
 	describe('插件管理器', () => {
 		it('应包含所有已注册的插件', () => {
-			// 12 个烟花类型插件 + 6 个序列插件 = 18 个
-			expect(pluginManager.size).toBe(18);
+			// 15 个烟花类型插件 + 8 个序列插件 = 23 个
+			expect(pluginManager.size).toBe(23);
 		});
 
 		it('所有插件状态应为 initialized', () => {

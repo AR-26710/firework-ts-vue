@@ -60,6 +60,9 @@ export default {
 		Ring: 'Ring',
 		Strobe: 'Strobe',
 		Willow: 'Willow',
+		Brocade: 'Brocade',
+		Peony: 'Peony',
+		Kamuro: 'Kamuro',
 	},
 	launchSequenceLabels: {
 		Random: 'Random',
@@ -68,6 +71,8 @@ export default {
 		Triple: 'Triple',
 		Pyramid: 'Pyramid',
 		'Small Barrage': 'Small Barrage',
+		Wave: 'Wave',
+		'Cross Burst': 'Cross Burst',
 	},
 	shuffleOption: {
 		ordered: 'Ordered',
@@ -104,7 +109,7 @@ export default {
 		},
 		launchSequence: {
 			header: 'Launch Sequence',
-			body: 'Choose the firework launch pattern. "Random" mixes various sequences by probability; "Single" launches one firework at a time; "Double" launches two simultaneously; "Triple" fires one in the center then one on each side; "Pyramid" launches from sides to center forming a pyramid shape; "Small Barrage" expands symmetrically from center to sides creating a fan effect.',
+			body: 'Choose the firework launch pattern. "Random" mixes various sequences by probability; "Single" launches one firework at a time; "Double" launches two simultaneously; "Triple" fires one in the center then one on each side; "Pyramid" launches from sides to center forming a pyramid shape; "Small Barrage" expands symmetrically from center to sides creating a fan effect; "Wave" launches sequentially from one side to the other creating a sweeping effect; "Cross Burst" launches five fireworks in a cross pattern.',
 		},
 		hideControls: {
 			header: 'Hide Controls',
