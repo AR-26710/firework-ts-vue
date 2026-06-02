@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>烟花模拟器 - 在线烟花特效 Canvas 动画</title>
+    <meta
+      name="description"
+      content="在线烟花模拟器，基于 Canvas 实现逼真烟花特效。支持11种烟花类型、文字烟花、音效系统、多种发射序列，可自由调节画质与尺寸。"
+    />
+    <meta
+      name="keywords"
+      content="烟花模拟器,烟花特效,在线烟花,Canvas烟花,烟花动画,文字烟花,firework simulator,firework effects"
+    />
+    <meta name="author" content="Caleb Miller" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="烟花模拟器 - 在线烟花特效 Canvas 动画" />
+    <meta
+      property="og:description"
+      content="在线烟花模拟器，基于 Canvas 实现逼真烟花特效。支持11种烟花类型、文字烟花、音效系统。"
+    />
+    <meta property="og:image" content="/img/firework-burst-icon-v2.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="烟花模拟器 - 在线烟花特效 Canvas 动画" />
+    <meta
+      name="twitter:description"
+      content="在线烟花模拟器，基于 Canvas 实现逼真烟花特效。支持11种烟花类型、文字烟花、音效系统。"
+    />
+    <meta name="twitter:image" content="/img/firework-burst-icon-v2.png" />
+
+    <!-- PWA / Mobile -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="烟花模拟器" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="application-name" content="烟花模拟器" />
+
+    <!-- Favicon & Icons -->
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="/img/firework-burst-icon-v2.png"
+    />
+    <link rel="icon" type="image/png" href="/img/firework-burst-icon-v2.png" />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="/img/firework-burst-icon-v2.png"
+    />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta
+      name="msapplication-TileImage"
+      content="/img/firework-burst-icon-v2.png"
+    />
+
+    <!-- Preconnect & Styles -->
+    <link href="/fonts/russo-one.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/reset-2.0.min.css" />
+    <link rel="stylesheet" href="/src/styles/style.scss" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "烟花模拟器",
+        "description": "在线烟花模拟器，基于 Canvas 实现逼真烟花特效。支持11种烟花类型、文字烟花、音效系统、多种发射序列。",
+        "applicationCategory": "EntertainmentApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "CNY"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Caleb Miller"
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- App -->
+    <div class="container">
+      <div id="app"></div>
+      <noscript>
+        <p style="text-align:center;color:#fff;padding:2em;">
+          烟花模拟器需要启用 JavaScript 才能运行。请在浏览器设置中启用 JavaScript 后刷新页面。
+        </p>
+      </noscript>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

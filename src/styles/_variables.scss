@@ -1,0 +1,124 @@
+// ============================================================
+// Design Token System
+// ============================================================
+
+// Breakpoints
+$small-bp: 640px;
+$large-bp: 840px;
+
+// Typography
+$font: 'Russo One', arial, sans-serif;
+$letter-spacing: 0.06em;
+$line-height-base: 1.25;
+$line-height-relaxed: 1.6;
+
+$font-size-xs: 0.68em;
+$font-size-sm: 0.75em;
+$font-size-base: 0.88em;
+$font-size-md: 0.9em;
+$font-size-lg: 1em;
+$font-size-xl: 1.25em;
+$font-size-2xl: 1.5em;
+$font-size-3xl: 1.75em;
+$font-size-4xl: 2em;
+$font-size-5xl: 2.2em;
+
+// Color System - Primary
+$primary: rgb(0, 150, 255);
+$primary-200: rgba($primary, 0.2);
+$primary-350: rgba($primary, 0.35);
+$primary-600: rgba($primary, 0.6);
+
+// Color System - Surface
+$surface-base: #000;
+$surface-overlay: rgba(0, 0, 0, 0.6);
+$surface-glass: rgba(255, 255, 255, 0.05);
+$surface-glass-hover: rgba(255, 255, 255, 0.12);
+$surface-glass-active: rgba(255, 255, 255, 0.18);
+$surface-input: rgba(255, 255, 255, 0.08);
+$surface-input-hover: rgba(255, 255, 255, 0.12);
+$surface-input-focus: rgba(255, 255, 255, 0.15);
+$surface-toast: rgba(0, 0, 0, 0.7);
+$surface-option-dropdown: #111;
+
+// Color System - Text
+$text-primary: #fff;
+$text-secondary: rgba(255, 255, 255, 0.75);
+$text-tertiary: rgba(255, 255, 255, 0.5);
+$text-quaternary: rgba(255, 255, 255, 0.38);
+$text-placeholder: rgba(255, 255, 255, 0.28);
+$text-placeholder-focus: rgba(255, 255, 255, 0.18);
+
+// Color System - Border
+$border-subtle: rgba(255, 255, 255, 0.08);
+$border-default: rgba(255, 255, 255, 0.12);
+$border-medium: rgba(255, 255, 255, 0.15);
+$border-strong: rgba(255, 255, 255, 0.2);
+$border-hover: rgba(255, 255, 255, 0.3);
+$border-focus: rgba(255, 255, 255, 0.4);
+$border-active: rgba(255, 255, 255, 0.5);
+$border-primary: rgba($primary, 0.6);
+
+// Color System - Interaction
+$interaction-hover: rgba(255, 255, 255, 0.04);
+$interaction-hover-strong: rgba(255, 255, 255, 0.06);
+$interaction-press: rgba(255, 255, 255, 0.1);
+$interaction-press-strong: rgba(255, 255, 255, 0.18);
+
+// Opacity Scale
+$opacity-disabled: 0.25;
+$opacity-faint: 0.32;
+$opacity-dim: 0.5;
+$opacity-bright: 0.75;
+$opacity-full: 1;
+
+// Spacing Scale (4px base)
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-15: 60px;
+
+// Border Radius Scale
+$radius-sm: 5px;
+$radius-md: 6px;
+$radius-lg: 8px;
+$radius-xl: 10px;
+$radius-2xl: 12px;
+$radius-pill: 9999px;
+
+// Transition Timing
+$duration-fast: 0.15s;
+$duration-normal: 0.25s;
+$duration-moderate: 0.3s;
+$duration-slow: 0.35s;
+$duration-slower: 0.4s;
+
+$ease-default: ease;
+$ease-in: ease-in;
+$ease-out: ease-out;
+$ease-in-out: ease-in-out;
+$ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-decelerate: cubic-bezier(0.4, 0, 0.2, 1);
+
+// Z-Index Scale
+$z-controls: 1;
+$z-input-bar: 10;
+$z-close-btn: 10;
+$z-toast: 100;
+$z-overlay: 100;
+$z-github-corner: 1000;
+
+// Backdrop Filter
+$blur-sm: blur(4px);
+$blur-md: blur(8px);
+$blur-lg: blur(12px);
+
+// Legacy compatibility
+$ui-opacity: 0.5;
+$ui-color: rgba(#fff, $ui-opacity);

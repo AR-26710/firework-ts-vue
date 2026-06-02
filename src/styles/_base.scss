@@ -1,0 +1,27 @@
+@use 'variables' as *;
+
+*,
+*::before,
+*::after {
+	position: relative;
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+html {
+	background-color: $surface-base;
+}
+
+body {
+	overflow: hidden;
+	color: $ui-color;
+	font-family: $font;
+	line-height: $line-height-base;
+	letter-spacing: $letter-spacing;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
