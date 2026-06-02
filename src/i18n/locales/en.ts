@@ -161,6 +161,8 @@ export default {
 			adjustSpeed: 'Adjust Simulation Speed',
 			adjustLaunchSequence: 'Adjust Launch Sequence',
 			switchShellType: 'Cycle Shell Type',
+			adjustShellSize: 'Adjust Shell Size',
+			adjustScaleFactor: 'Adjust View Scale',
 			showShortcuts: 'Show Shortcuts Help',
 			closesetting: 'Close setting/Help',
 			categories: {
@@ -208,6 +210,8 @@ export default {
 		hideToastOn: 'Hide Toast: On',
 		hideToastOff: 'Hide Toast: Off',
 		speed: 'Speed: {speed}%',
+		shellSize: 'Shell Size: {size}',
+		scaleFactor: 'Scale: {scale}%',
 		dependencyAutoLaunch: 'Auto Launch must be enabled first',
 		dependencyNoFinale: 'Cannot adjust launch sequence in Finale mode',
 		dependencyTextFirework: 'Text Firework must be enabled first',

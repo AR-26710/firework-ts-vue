@@ -13,6 +13,7 @@ import {
 	updateConfig,
 } from '@/store/actions';
 import { setSimSpeed, simSpeed } from '@/core/state';
+import { handleResize } from '@/game-loop';
 import { getShellNames } from '@/simulation/shell-registry';
 import { getSequenceNames } from '@/simulation/sequences/sequence-registry';
 import type { LaunchSequenceName } from '@/simulation/sequences/types';
@@ -52,13 +53,33 @@ function switchLaunchSequence(direction: number) {
 	const newIndex =
 		(currentIndex + direction + launchSequenceNames.length) % launchSequenceNames.length;
 	const newSequence = launchSequenceNames[newIndex];
-	// 切换发射序列时，自动禁用终幕模式（两者互斥）
 	const updates: Record<string, unknown> = { launchSequence: newSequence };
 	if (store.state.config.finale) {
 		updates.finale = false;
 	}
 	updateConfig(updates);
 	showToast(i18n.global.t(`launchSequenceLabels.${newSequence}`) || newSequence);
+}
+
+const shellSizeOptions = ['3"', '4"', '6"', '8"', '12"', '16"'];
+const scaleFactorOptions = [0.5, 0.62, 0.75, 0.9, 1.0, 1.5, 2.0];
+
+function adjustShellSize(direction: number) {
+	const currentSize = parseInt(store.state.config.size, 10);
+	const newSize = (currentSize + direction + shellSizeOptions.length) % shellSizeOptions.length;
+	updateConfig({ size: String(newSize) });
+	showToast(i18n.global.t('toast.shellSize', { size: shellSizeOptions[newSize] }));
+}
+
+function adjustScaleFactor(direction: number) {
+	const currentScale = store.state.config.scaleFactor;
+	const currentIndex = scaleFactorOptions.findIndex((opt) => Math.abs(opt - currentScale) < 0.01);
+	const newIndex =
+		(currentIndex + direction + scaleFactorOptions.length) % scaleFactorOptions.length;
+	const newScale = scaleFactorOptions[newIndex];
+	updateConfig({ scaleFactor: newScale });
+	handleResize();
+	showToast(i18n.global.t('toast.scaleFactor', { scale: Math.round(newScale * 100) }));
 }
 
 /** 快捷键配置项 */
@@ -241,6 +262,30 @@ const shortcuts: ShortcutDefinition[] = [
 			setSimSpeed(newSpeed);
 			speedBarOpacityRef.value = 1;
 			showToast(i18n.global.t('toast.speed', { speed: Math.round(simSpeed * 100) }));
+		},
+	},
+	{
+		keys: ['[', ']'],
+		label: '[ / ]',
+		descriptionKey: 'adjustShellSize',
+		category: 'visual',
+		preventDefault: true,
+		ignoreRepeat: true,
+		action(event) {
+			const direction = event.key === '[' ? -1 : 1;
+			adjustShellSize(direction);
+		},
+	},
+	{
+		keys: [',', '.'],
+		label: ', / .',
+		descriptionKey: 'adjustScaleFactor',
+		category: 'visual',
+		preventDefault: true,
+		ignoreRepeat: true,
+		action(event) {
+			const direction = event.key === ',' ? -1 : 1;
+			adjustScaleFactor(direction);
 		},
 	},
 	{

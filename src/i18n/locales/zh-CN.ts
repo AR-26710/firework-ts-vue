@@ -161,6 +161,8 @@ export default {
 			adjustSpeed: '调整模拟速度',
 			adjustLaunchSequence: '调整发射序列',
 			switchShellType: '按顺序切换烟花类型',
+			adjustShellSize: '调整烟花尺寸',
+			adjustScaleFactor: '调整视图缩放',
 			showShortcuts: '显示快捷键帮助',
 			closesetting: '关闭菜单/帮助',
 			categories: {
@@ -208,6 +210,8 @@ export default {
 		hideToastOn: '隐藏提示: 开',
 		hideToastOff: '隐藏提示: 关',
 		speed: '速度: {speed}%',
+		shellSize: '烟花尺寸: {size}',
+		scaleFactor: '缩放: {scale}%',
 		dependencyAutoLaunch: '需要先开启自动发射',
 		dependencyNoFinale: '终幕模式下不可调整发射序列',
 		dependencyTextFirework: '需要先开启文字烟花',
