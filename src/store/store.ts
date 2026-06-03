@@ -156,7 +156,7 @@ function getDefaultConfig(): StoreConfig {
 		textSingleCluster: false,
 		launchSequence: 'Random',
 		hideCursor: false,
-		autoHideCursor: true,
+		autoHideCursor: false,
 	};
 }
 
