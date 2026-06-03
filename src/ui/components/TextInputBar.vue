@@ -104,7 +104,7 @@ function onKeyDown(e: KeyboardEvent) {
 		background: rgba(#000, 0.45);
 		border: 1px solid rgba(#fff, 0.1);
 		border-radius: $radius-2xl;
-		padding: $space-1 $space-1 + $space-1 0 0;
+		padding: $space-1 ($space-1 + $space-1);
 		backdrop-filter: $blur-lg saturate(1.2);
 		-webkit-backdrop-filter: $blur-lg saturate(1.2);
 		box-shadow:
@@ -203,6 +203,7 @@ function onKeyDown(e: KeyboardEvent) {
 		font-size: 12px;
 		text-align: center;
 		outline: none;
+		appearance: textfield;
 		-moz-appearance: textfield;
 		transition:
 			background $duration-normal,
