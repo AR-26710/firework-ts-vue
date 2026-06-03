@@ -26,7 +26,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useStore } from '@/ui/vue-store';
 import { SKY_LIGHT_NONE } from '@/core/constants';
 import { quality } from '@/core/state';
@@ -40,10 +39,9 @@ import Toast from '@/ui/components/Toast.vue';
 import LoadingInit from '@/ui/components/LoadingInit.vue';
 
 const state = useStore();
-const { t } = useI18n({ useScope: 'global' });
 
 const ready = ref(false);
-const loadingStatus = ref(t('loading.status'));
+const loadingStatus = ref('loading.status');
 const toastRef = ref<InstanceType<typeof Toast> | null>(null);
 const loadingRef = ref<InstanceType<typeof LoadingInit> | null>(null);
 const canvasContainer = ref<HTMLElement | null>(null);

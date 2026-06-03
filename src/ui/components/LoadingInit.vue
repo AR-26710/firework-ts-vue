@@ -10,7 +10,7 @@
 				></span>
 			</div>
 			<div class="loading-init__header">{{ t('loading.title') }}</div>
-			<div class="loading-init__status">{{ status }}</div>
+			<div class="loading-init__status">{{ t(status) }}</div>
 		</div>
 	</Transition>
 </template>

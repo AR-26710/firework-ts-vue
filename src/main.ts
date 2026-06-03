@@ -80,7 +80,7 @@ if (IS_HEADER) {
 	const appEl = document.getElementById('app')!;
 	const vm = app.mount(appEl);
 	setShowToastFn((vm as any).showToast);
-	(vm as any).setLoadingStatus(i18n.global.t('loading.lightFuse'));
+	(vm as any).setLoadingStatus('loading.lightFuse');
 
 	setTimeout(() => {
 		soundManager.preload().then(
