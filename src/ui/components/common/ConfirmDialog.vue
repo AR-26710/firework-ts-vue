@@ -10,17 +10,17 @@
 				<div class="confirm-dialog__actions">
 					<button
 						type="button"
-						class="confirm-dialog__btn confirm-dialog__btn--cancel"
-						@click="handleCancel"
-					>
-						{{ cancelText }}
-					</button>
-					<button
-						type="button"
 						class="confirm-dialog__btn confirm-dialog__btn--confirm"
 						@click="handleConfirm"
 					>
 						{{ confirmText }}
+					</button>
+					<button
+						type="button"
+						class="confirm-dialog__btn confirm-dialog__btn--cancel"
+						@click="handleCancel"
+					>
+						{{ cancelText }}
 					</button>
 				</div>
 			</div>
