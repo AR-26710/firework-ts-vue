@@ -10,6 +10,7 @@ import { isRunning } from '@/store/selectors';
 import { launchShellFromConfig } from '@/simulation/shell-launch';
 import { setSimSpeed } from '@/core/state';
 import { store } from '@/store/store';
+import { handlePointerMoveForCursor, initCursorManager } from '@/input/cursor-manager';
 
 /**
  * 类指针事件接口，抽象了指针事件的核心属性。
@@ -136,6 +137,8 @@ function handlePointerEnd(_event: PointerEventLike) {
  * @param event - 类指针事件对象
  */
 function handlePointerMove(event: PointerEventLike) {
+	handlePointerMoveForCursor();
+
 	if (!isRunning()) return;
 
 	if (isUpdatingSpeed) {
@@ -153,4 +156,5 @@ export function initPointerHandlers() {
 	mainStage.addEventListener('pointerstart', handlePointerStart);
 	mainStage.addEventListener('pointerend', handlePointerEnd);
 	mainStage.addEventListener('pointermove', handlePointerMove);
+	initCursorManager();
 }

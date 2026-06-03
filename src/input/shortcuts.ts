@@ -18,6 +18,7 @@ import { getShellNames } from '@/simulation/shell-registry';
 import { getSequenceNames } from '@/simulation/sequences/sequence-registry';
 import type { LaunchSequenceName } from '@/simulation/sequences/types';
 import { showToast } from '@/main';
+import { toggleCursorHide, toggleAutoHideCursor } from '@/input/cursor-manager';
 import i18n from '@/i18n';
 
 /** 速度条透明度响应式引用，用于控制速度条 UI 的显示与隐藏 */
@@ -246,6 +247,35 @@ const shortcuts: ShortcutDefinition[] = [
 					? i18n.global.t('toast.hideToastOn')
 					: i18n.global.t('toast.hideToastOff'),
 				true
+			);
+		},
+	},
+	{
+		keys: ['x'],
+		label: 'X',
+		descriptionKey: 'toggleHideCursor',
+		category: 'visual',
+		action() {
+			toggleCursorHide();
+			showToast(
+				store.state.config.hideCursor
+					? i18n.global.t('toast.hideCursorOn')
+					: i18n.global.t('toast.hideCursorOff')
+			);
+		},
+	},
+	{
+		keys: ['ctrl+x'],
+		label: 'Ctrl + X',
+		descriptionKey: 'toggleAutoHideCursor',
+		category: 'visual',
+		preventDefault: true,
+		action() {
+			toggleAutoHideCursor();
+			showToast(
+				store.state.config.autoHideCursor
+					? i18n.global.t('toast.autoHideCursorOn')
+					: i18n.global.t('toast.autoHideCursorOff')
 			);
 		},
 	},

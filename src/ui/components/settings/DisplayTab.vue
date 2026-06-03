@@ -65,6 +65,23 @@
 				@change="onConfigChange"
 				@help="openHelp"
 			/>
+			<FormCheckbox
+				id="hide-cursor"
+				v-model="state.config.hideCursor"
+				:label="$t('setting.hideCursor')"
+				help-topic="hideCursor"
+				@change="onHideCursorChange"
+				@help="openHelp"
+			/>
+			<FormCheckbox
+				v-if="!state.config.hideCursor"
+				id="auto-hide-cursor"
+				v-model="state.config.autoHideCursor"
+				:label="$t('setting.autoHideCursor')"
+				help-topic="autoHideCursor"
+				@change="onAutoHideCursorChange"
+				@help="openHelp"
+			/>
 		</div>
 	</div>
 </template>
@@ -83,6 +100,7 @@ import {
 	SKY_LIGHT_NORMAL,
 } from '@/core/constants';
 import { handleResize } from '@/game-loop';
+import { applyCursorHideState } from '@/input/cursor-manager';
 import FormSelect from '../form/FormSelect.vue';
 import FormCheckbox from '../form/FormCheckbox.vue';
 
@@ -128,6 +146,28 @@ function onScaleConfigChange() {
 	setTimeout(() => {
 		actions.updateConfig();
 		handleResize();
+	}, 0);
+}
+
+function onHideCursorChange() {
+	setTimeout(() => {
+		// 互斥：启用手动隐藏时关闭自动隐藏
+		if (state.config.hideCursor) {
+			state.config.autoHideCursor = false;
+		}
+		actions.updateConfig();
+		applyCursorHideState();
+	}, 0);
+}
+
+function onAutoHideCursorChange() {
+	setTimeout(() => {
+		// 互斥：启用自动隐藏时关闭手动隐藏
+		if (state.config.autoHideCursor) {
+			state.config.hideCursor = false;
+		}
+		actions.updateConfig();
+		applyCursorHideState();
 	}, 0);
 }
 

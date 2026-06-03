@@ -18,7 +18,7 @@ function handleKeydown(event: KeyboardEvent) {
 		return;
 	}
 
-	const key = event.key.toLowerCase();
+	const key = (event.ctrlKey && event.key !== 'Control' ? 'ctrl+' : '') + event.key.toLowerCase();
 	const shortcut = getShortcutByKey(key);
 
 	if (!shortcut) return;

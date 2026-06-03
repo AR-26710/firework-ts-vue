@@ -49,6 +49,8 @@ interface StoreConfig {
 	textRandomPositionShuffle: boolean;
 	textSingleCluster: boolean;
 	launchSequence: string;
+	hideCursor: boolean;
+	autoHideCursor: boolean;
 }
 
 /**
@@ -96,6 +98,8 @@ interface StoreSchema {
 		| 'textRandomPositionShuffle'
 		| 'textSingleCluster'
 		| 'autoLaunch'
+		| 'hideCursor'
+		| 'autoHideCursor'
 	>;
 }
 
@@ -151,6 +155,8 @@ function getDefaultConfig(): StoreConfig {
 		textRandomPositionShuffle: false,
 		textSingleCluster: false,
 		launchSequence: 'Random',
+		hideCursor: false,
+		autoHideCursor: true,
 	};
 }
 
@@ -258,6 +264,8 @@ const store: Store = {
 					textRandomPositionShuffle: config.textRandomPositionShuffle,
 					textSingleCluster: config.textSingleCluster,
 					autoLaunch: config.autoLaunch,
+					hideCursor: config.hideCursor,
+					autoHideCursor: config.autoHideCursor,
 				},
 			})
 		);

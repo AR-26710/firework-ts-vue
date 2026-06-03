@@ -2,7 +2,7 @@
 
 基于 Canvas 的网页烟花模拟器，支持多种烟花类型、音效、文字烟花、插件化架构等功能。
 
-二开自 Caleb Miller 的 [Firework Simulator v2](https://codepen.io/MillerTime/pen/XgpNwb)，在原版基础上使用 vue 与 ts 进行重构并增加了文字烟花、插件系统、中文本地化等功能。
+二开自 Caleb Miller 的 [Firework Simulator v2](https://codepen.io/MillerTime/pen/XgpNwb) ，在原版基础上使用 vue 与 ts 进行重构并增加了文字烟花、插件系统、中文本地化等功能。
 
 ## 功能
 
@@ -67,6 +67,8 @@
 - **长曝光**：实验性效果，保留长条光线（拖尾渐隐透明度极低 0.0025）
 - **隐藏控制**：隐藏顶部半透明控件
 - **隐藏提示**：隐藏所有操作提示信息
+- **隐藏光标**：隐藏画布上的鼠标光标（与自动隐藏光标互斥）
+- **自动隐藏光标**：鼠标静止 3 秒后自动隐藏，移动时恢复（与隐藏光标互斥）
 
 ### 行为设置
 
@@ -121,6 +123,8 @@
 | `L`           | 切换长曝光     | 画面效果 |
 | `H`           | 切换隐藏控制    | 画面效果 |
 | `T`           | 切换隐藏提示    | 画面效果 |
+| `X`           | 切换隐藏光标    | 画面效果 |
+| `Ctrl+X`      | 切换自动隐藏光标  | 画面效果 |
 | `+` / `-`     | 调整模拟速度    | 画面效果 |
 | `[` / `]`     | 调整烟花尺寸    | 画面效果 |
 | `,` / `.`     | 调整视图缩放    | 画面效果 |
@@ -132,7 +136,7 @@
 | `O`           | 切换设置菜单    | 界面   |
 | `/`           | 显示快捷键帮助   | 界面   |
 
-部分快捷键有前置条件：`W` 需开启自动发射，`←`/`→` 需开启自动发射且非终幕模式，`R`/`G`/`C` 需开启文字烟花，`D` 需同时开启文字烟花和随机位置。
+部分快捷键有前置条件：`W` 需开启自动发射，`←`/`→` 需开启自动发射且非终幕模式，`R`/`G`/`C` 需开启文字烟花，`D` 需同时开启文字烟花和随机位置。`X` 和 `Ctrl+X` 互斥：启用隐藏光标时自动关闭自动隐藏，启用自动隐藏时自动关闭隐藏光标。
 
 ### 设备适配
 
@@ -179,6 +183,7 @@ src/
 │       ├── en.ts              # 英文语言包
 │       └── zh-CN.ts           # 中文语言包
 ├── input/
+│   ├── cursor-manager.ts      # 光标隐藏管理（手动/自动隐藏、互斥逻辑）
 │   ├── keyboard-handler.ts    # 键盘事件处理
 │   ├── pointer-handler.ts     # 鼠标/触摸指针事件处理
 │   └── shortcuts.ts           # 集中式快捷键注册表
@@ -267,7 +272,7 @@ src/
         ├── help/              # 帮助组件
         │   ├── HelpModal.vue
         │   └── ShortcutsHelp.vue
-        └── settings/         # 设置面板
+        └── settings/          # 设置面板
             ├── Settings.vue
             ├── BehaviorTab.vue
             ├── DisplayTab.vue
@@ -298,7 +303,7 @@ src/
 采用观察者模式 + localStorage 持久化的集中式状态管理：
 
 - **StoreState**：包含 `paused`、`soundEnabled`、`settingOpen`、`openHelpTopic`、`fullscreen` 和 `config`
-- **StoreConfig**：所有用户可调配置项（画质、烟花类型、尺寸、自动发射、终幕、天空光照、缩放、文字烟花等）
+- **StoreConfig**：所有用户可调配置项（画质、烟花类型、尺寸、自动发射、终幕、天空光照、缩放、隐藏光标、自动隐藏光标、文字烟花等）
 - **持久化**：localStorage 键名 `cm_fireworks_data`，schema 版本 `1.7`
 - **Vue 桥接**：`vue-store.ts` 通过 `reactive` + store 订阅实现 Vue 响应式
 
