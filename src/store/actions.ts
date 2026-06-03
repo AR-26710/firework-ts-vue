@@ -10,6 +10,7 @@ import { setQuality } from '@/core/state';
 import { qualitySelector, canPlaySoundSelector } from './selectors';
 import type { StoreConfig, StoreState } from './store';
 import { soundManager } from '@/audio/sound-manager';
+import { applyCursorHideState } from '@/input/cursor-manager';
 
 /**
  * 检测浏览器是否支持全屏 API。
@@ -128,6 +129,7 @@ function resetConfig() {
 		config: getDefaultConfig(),
 	});
 	configDidUpdate();
+	applyCursorHideState();
 }
 
 export {
