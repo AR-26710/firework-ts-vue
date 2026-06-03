@@ -85,16 +85,16 @@ if (IS_HEADER) {
 	setTimeout(() => {
 		soundManager.preload().then(
 			() => {
-				(vm as any).setReady();
-				nextTick(() => {
+				(vm as any).requestReady();
+				(vm as any).onReady(() => {
 					initGameLoop(vm as any);
 					togglePause(false);
 					configDidUpdate();
 				});
 			},
 			(reason) => {
-				(vm as any).setReady();
-				nextTick(() => {
+				(vm as any).requestReady();
+				(vm as any).onReady(() => {
 					initGameLoop(vm as any);
 					togglePause(false);
 					configDidUpdate();

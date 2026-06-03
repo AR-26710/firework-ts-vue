@@ -1,5 +1,5 @@
 <template>
-	<LoadingInit v-if="!ready" :status="loadingStatus" />
+	<LoadingInit v-if="!ready" ref="loadingRef" :status="loadingStatus" @done="ready = true" />
 	<div v-else class="stage-container">
 		<div
 			ref="canvasContainer"
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from '@/ui/vue-store';
 import { SKY_LIGHT_NONE } from '@/core/constants';
@@ -45,14 +45,11 @@ const { t } = useI18n({ useScope: 'global' });
 const ready = ref(false);
 const loadingStatus = ref(t('loading.status'));
 const toastRef = ref<InstanceType<typeof Toast> | null>(null);
+const loadingRef = ref<InstanceType<typeof LoadingInit> | null>(null);
 const canvasContainer = ref<HTMLElement | null>(null);
 
 function setLoadingStatus(status: string) {
 	loadingStatus.value = status;
-}
-
-function setReady() {
-	ready.value = true;
 }
 
 const canvasBgStyle = computed(() => {
@@ -62,7 +59,6 @@ const canvasBgStyle = computed(() => {
 	return {};
 });
 
-import { watch } from 'vue';
 watch(
 	() => state.config.quality,
 	() => {
@@ -71,11 +67,31 @@ watch(
 	{ immediate: true }
 );
 
+let onReadyCallback: (() => void) | null = null;
+
+watch(ready, (isReady) => {
+	if (isReady && onReadyCallback) {
+		nextTick(() => onReadyCallback!());
+	}
+});
+
+function onReady(cb: () => void) {
+	if (ready.value) {
+		nextTick(() => cb());
+	} else {
+		onReadyCallback = cb;
+	}
+}
+
 function showToast(text: string) {
 	toastRef.value?.showToast(text);
 }
 
-defineExpose({ showToast, canvasContainer, setLoadingStatus, setReady });
+function requestReady() {
+	loadingRef.value?.requestReady();
+}
+
+defineExpose({ showToast, canvasContainer, setLoadingStatus, requestReady, onReady });
 </script>
 
 <style scoped lang="scss">
