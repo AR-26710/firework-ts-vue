@@ -342,6 +342,12 @@ pnpm format
 
 # 检查代码格式
 pnpm format:check
+
+# 生成图标
+pnpm generate-icons
+
+# Git hooks
+pnpm prepare
 ```
 
 ## 许可证
