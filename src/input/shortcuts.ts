@@ -13,11 +13,11 @@ import {
 	updateConfig,
 } from '@/store/actions';
 import { setSimSpeed, simSpeed } from '@/core/state';
-import { handleResize } from '@/game-loop';
+import { handleResize } from '@/services/resize';
 import { getShellNames } from '@/simulation/shell-registry';
 import { getSequenceNames } from '@/simulation/sequences/sequence-registry';
 import type { LaunchSequenceName } from '@/simulation/sequences/types';
-import { showToast } from '@/main';
+import { showToast } from '@/services/toast';
 import { toggleCursorHide, toggleAutoHideCursor } from '@/input/cursor-manager';
 import i18n from '@/i18n';
 

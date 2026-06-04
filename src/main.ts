@@ -11,32 +11,12 @@ import { IS_HEADER } from '@/core/constants';
 import { togglePause, configDidUpdate } from '@/store/actions';
 import { soundManager } from '@/audio/sound-manager';
 import { initGameLoop } from '@/game-loop';
+import { registerToastFn } from '@/services/toast';
 import i18n from '@/i18n';
 import App from '@/ui/App.vue';
-import { store } from '@/store/store';
 import { initializePlugins } from '@/simulation/plugins';
+import type { AppInstance } from '@/ui/app-instance';
 import '@/ui/icons';
-
-// 全局 showToast 引用，供非 Vue 模块调用
-let _showToast: ((text: string) => void) | null = null;
-
-/**
- * 设置全局 showToast 函数引用。由 Vue App 组件挂载后调用。
- */
-export function setShowToastFn(fn: (text: string) => void) {
-	_showToast = fn;
-}
-
-/**
- * 显示 Toast 提示。供非 Vue 模块（如键盘处理器）调用。
- * 如果 hideToast 配置为 true，则不显示提示（除非 force 为 true）。
- * @param text - 提示文本
- * @param force - 是否强制显示（即使 hideToast 为 true）
- */
-export function showToast(text: string, force?: boolean) {
-	if (store.state.config.hideToast && !force) return;
-	_showToast?.(text);
-}
 
 /**
  * 应用初始化函数。执行以下操作：
@@ -47,21 +27,19 @@ export function showToast(text: string, force?: boolean) {
  * 5. 触发配置更新回调
  */
 function init() {
-	// 初始化插件系统（注册所有烟花类型和发射序列）
 	initializePlugins();
 
 	const app = createApp(App);
 	app.use(i18n);
 	const appEl = document.getElementById('app')!;
-	const vm = app.mount(appEl);
+	const vm = app.mount(appEl) as unknown as AppInstance;
 
-	// 暴露 showToast 供外部模块使用
-	setShowToastFn((vm as any).showToast);
+	registerToastFn(vm.showToast);
 
 	// 先渲染舞台（包含 canvas），再初始化游戏循环
-	(vm as any).setReady();
+	vm.setReady();
 	nextTick(() => {
-		initGameLoop(vm as any);
+		initGameLoop(vm);
 		togglePause(false);
 		configDidUpdate();
 	});
@@ -71,31 +49,29 @@ function init() {
 if (IS_HEADER) {
 	init();
 } else {
-	// 初始化插件系统（注册所有烟花类型和发射序列）
 	initializePlugins();
 
-	// 先挂载 Vue 应用（显示 LoadingInit 组件），再更新状态并预加载音频
 	const app = createApp(App);
 	app.use(i18n);
 	const appEl = document.getElementById('app')!;
-	const vm = app.mount(appEl);
-	setShowToastFn((vm as any).showToast);
-	(vm as any).setLoadingStatus('loading.lightFuse');
+	const vm = app.mount(appEl) as unknown as AppInstance;
+	registerToastFn(vm.showToast);
+	vm.setLoadingStatus('loading.lightFuse');
 
 	setTimeout(() => {
 		soundManager.preload().then(
 			() => {
-				(vm as any).requestReady();
-				(vm as any).onReady(() => {
-					initGameLoop(vm as any);
+				vm.requestReady();
+				vm.onReady(() => {
+					initGameLoop(vm);
 					togglePause(false);
 					configDidUpdate();
 				});
 			},
 			(reason) => {
-				(vm as any).requestReady();
-				(vm as any).onReady(() => {
-					initGameLoop(vm as any);
+				vm.requestReady();
+				vm.onReady(() => {
+					initGameLoop(vm);
 					togglePause(false);
 					configDidUpdate();
 				});

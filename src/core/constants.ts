@@ -1,70 +1,21 @@
 /**
  * @module core/constants
  * @description 烟花模拟项目的全局常量模块。
- * 包含设备检测、物理参数、画质等级、天空光照、颜色常量等核心常量定义。
+ * 包含物理参数、画质等级、天空光照、颜色常量等核心常量定义。
+ * 设备检测相关常量请见 {@link core/device}。
  */
 
-/**
- * 是否为移动设备。当视口宽度小于等于 640px 时判定为移动设备。
- * @type {boolean}
- * @example
- * if (IS_MOBILE) {
- *   // 使用移动端优化逻辑
- * }
- */
-const IS_MOBILE = window.innerWidth <= 640;
-
-/**
- * 是否为桌面设备。当视口宽度大于 800px 时判定为桌面设备。
- * @type {boolean}
- */
-const IS_DESKTOP = window.innerWidth > 800;
-
-/**
- * 是否为顶部横幅（Header）模式。当桌面设备且视口高度小于 300px 时判定为横幅模式。
- * @type {boolean}
- */
-const IS_HEADER = IS_DESKTOP && window.innerHeight < 300;
-
-/**
- * 检测当前是否为移动设备（响应式，随窗口大小变化更新）。
- * @returns {boolean} 如果当前视口宽度小于等于 640px 则返回 true
- */
-function isMobile() {
-	return window.innerWidth <= 640;
-}
-
-/**
- * 检测当前是否为桌面设备（响应式，随窗口大小变化更新）。
- * @returns {boolean} 如果当前视口宽度大于 800px 则返回 true
- */
-function isDesktop() {
-	return window.innerWidth > 800;
-}
-
-/**
- * 检测当前是否为横幅模式（响应式，随窗口大小变化更新）。
- * @returns {boolean} 如果桌面设备且视口高度小于 300px 则返回 true
- */
-function isHeader() {
-	return isDesktop() && window.innerHeight < 300;
-}
-
-/**
- * 是否为高端设备。根据 CPU 逻辑核心数判断：
- * - 视口宽度 ≤ 1024px 时，至少需要 4 个核心；
- * - 视口宽度 > 1024px 时，至少需要 8 个核心。
- * 若无法获取核心数则默认为非高端设备。
- * @type {boolean}
- */
-const IS_HIGH_END_DEVICE = (() => {
-	const hwConcurrency = navigator.hardwareConcurrency;
-	if (!hwConcurrency) {
-		return false;
-	}
-	const minCount = window.innerWidth <= 1024 ? 4 : 8;
-	return hwConcurrency >= minCount;
-})();
+// 设备检测常量从 device 模块重新导出，保持向后兼容
+export {
+	IS_MOBILE,
+	IS_DESKTOP,
+	IS_HEADER,
+	IS_HIGH_END_DEVICE,
+	isMobile,
+	isDesktop,
+	isHeader,
+	getDefaultScaleFactor,
+} from './device';
 
 /**
  * 最大画布宽度（像素），对应 8K 分辨率宽度。
@@ -223,35 +174,12 @@ COLOR_CODES.forEach((hex) => {
 	};
 });
 
-/**
- * 根据当前设备类型获取默认缩放因子。
- * - 移动设备返回 0.9；
- * - 横幅模式返回 0.75；
- * - 其他情况返回 1。
- * @returns {number} 默认缩放因子
- * @example
- * const scale = getDefaultScaleFactor() // 桌面端返回 1
- */
-function getDefaultScaleFactor() {
-	if (IS_MOBILE) return 0.9;
-	if (IS_HEADER) return 0.75;
-	return 1;
-}
-
 export type { ColorTuple, ColorPool };
 
 export {
-	IS_MOBILE,
-	IS_DESKTOP,
-	IS_HEADER,
-	IS_HIGH_END_DEVICE,
-	isMobile,
-	isDesktop,
-	isHeader,
 	MAX_WIDTH,
 	MAX_HEIGHT,
 	GRAVITY,
-	getDefaultScaleFactor,
 	QUALITY_LOW,
 	QUALITY_NORMAL,
 	QUALITY_HIGH,

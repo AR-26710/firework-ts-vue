@@ -1,12 +1,12 @@
 /**
  * @module renderer/renderer
- * @description 烟花渲染模块。负责将烟花模拟中的粒子（星体、火花、爆炸闪光）绘制到 Canvas 上，
- * 并根据活跃星体的颜色和数量动态更新天空背景色。同时负责绘制速度指示条。
+ * @description 烟花渲染模块。负责将烟花模拟中的粒子（星体、火花、爆炸闪光）绘制到 Canvas 上。
  * 使用双层 Canvas 架构：trailsStage 用于绘制拖尾和闪光（带半透明覆盖实现渐隐效果），
  * mainStage 用于绘制当前帧的明亮粒子。
+ * 天空背景渲染已提取至 renderer/sky-renderer。
  */
 
-import { COLOR, SKY_LIGHT_NONE, getAllColorCodes, getColorTuple } from '@/core/constants';
+import { COLOR, SKY_LIGHT_NONE, getAllColorCodes } from '@/core/constants';
 import { simSpeed, stageW, stageH, isLowQuality } from '@/core/state';
 import { getMainStage, getTrailsStage } from '@/core/stages';
 import { store } from '@/store/store';
@@ -14,51 +14,7 @@ import { skyLightingSelector, scaleFactorSelector } from '@/store/selectors';
 import { Star } from '@/simulation/particles/star';
 import { Spark } from '@/simulation/particles/spark';
 import { BurstFlash } from '@/simulation/particles/burst-flash';
-import { getStageContainer } from '@/game-loop';
-
-const currentSkyColor = { r: 0, g: 0, b: 0 };
-const targetSkyColor = { r: 0, g: 0, b: 0 };
-
-/**
- * 根据当前活跃星体的颜色和数量更新天空背景色。
- * 统计所有颜色的活跃星体数量，按比例混合为目标颜色，
- * 再根据天空光照强度和星体总数计算最终饱和度，
- * 最后以插值方式平滑过渡当前天空颜色。
- *
- * @param {number} speed - 当前模拟速度倍率，用于控制颜色过渡的插值步长
- */
-function colorSky(speed: number) {
-	const maxSkySaturation = skyLightingSelector() * 15;
-	const maxStarCount = 500;
-	let totalStarCount = 0;
-	targetSkyColor.r = 0;
-	targetSkyColor.g = 0;
-	targetSkyColor.b = 0;
-	getAllColorCodes().forEach((color) => {
-		const tuple = getColorTuple(color);
-		const count = Star.active[color]?.length || 0;
-		totalStarCount += count;
-		targetSkyColor.r += tuple.r * count;
-		targetSkyColor.g += tuple.g * count;
-		targetSkyColor.b += tuple.b * count;
-	});
-
-	const intensity = Math.pow(Math.min(1, totalStarCount / maxStarCount), 0.3);
-	const maxColorComponent = Math.max(1, targetSkyColor.r, targetSkyColor.g, targetSkyColor.b);
-	targetSkyColor.r = (targetSkyColor.r / maxColorComponent) * maxSkySaturation * intensity;
-	targetSkyColor.g = (targetSkyColor.g / maxColorComponent) * maxSkySaturation * intensity;
-	targetSkyColor.b = (targetSkyColor.b / maxColorComponent) * maxSkySaturation * intensity;
-
-	const colorChange = 10;
-	currentSkyColor.r += ((targetSkyColor.r - currentSkyColor.r) / colorChange) * speed;
-	currentSkyColor.g += ((targetSkyColor.g - currentSkyColor.g) / colorChange) * speed;
-	currentSkyColor.b += ((targetSkyColor.b - currentSkyColor.b) / colorChange) * speed;
-
-	const canvasContainer = getStageContainer()?.querySelector('.canvas-container') as HTMLElement;
-	if (canvasContainer) {
-		canvasContainer.style.backgroundColor = `rgb(${currentSkyColor.r | 0}, ${currentSkyColor.g | 0}, ${currentSkyColor.b | 0})`;
-	}
-}
+import { colorSky } from './sky-renderer';
 
 /**
  * 主渲染函数。每帧调用，负责绘制所有烟花粒子效果。
@@ -74,8 +30,8 @@ function colorSky(speed: number) {
  * 8. 若速度条透明度大于 0，在画面底部绘制速度指示条
  * 9. 重置 Canvas 变换矩阵
  *
- * @param {number} speed - 当前模拟速度倍率，影响拖尾渐隐速度和天空颜色过渡
- * @param {number} speedBarOpacity - 速度指示条的透明度（0~1），为 0 时不绘制
+ * @param speed - 当前模拟速度倍率，影响拖尾渐隐速度和天空颜色过渡
+ * @param speedBarOpacity - 速度指示条的透明度（0~1），为 0 时不绘制
  */
 export function render(speed: number, speedBarOpacity: number) {
 	const mainStage = getMainStage();

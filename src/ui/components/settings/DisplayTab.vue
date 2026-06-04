@@ -99,7 +99,7 @@ import {
 	SKY_LIGHT_DIM,
 	SKY_LIGHT_NORMAL,
 } from '@/core/constants';
-import { handleResize } from '@/game-loop';
+import { handleResize } from '@/services/resize';
 import { applyCursorHideState } from '@/input/cursor-manager';
 import FormSelect from '../form/FormSelect.vue';
 import FormCheckbox from '../form/FormCheckbox.vue';
