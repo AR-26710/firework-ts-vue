@@ -1,6 +1,3 @@
-// OLD VERSION DO NOT USE
-// Older pens still rely on this.
-
 /**
  * Math.js
  * -----------

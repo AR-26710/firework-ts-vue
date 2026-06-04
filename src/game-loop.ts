@@ -32,7 +32,7 @@ export function initGameLoop(vm?: AppInstance) {
 	bindResizeListener();
 	initPointerHandlers();
 	initKeyboardHandler();
-	getMainStage().addEventListener('ticker', update as any);
+	getMainStage().addEventListener('ticker', update);
 }
 
 export { handleResize };

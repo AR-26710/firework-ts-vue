@@ -161,6 +161,31 @@ function getDefaultConfig(): StoreConfig {
 }
 
 /**
+ * 持久化配置键名列表，与 StoreSchema.data 的 Pick 类型保持同步。
+ * 新增配置项时只需在此列表和 StoreSchema 的 Pick 类型中添加，无需修改 persist() 方法。
+ */
+const PERSIST_CONFIG_KEYS: (keyof StoreSchema['data'])[] = [
+	'quality',
+	'size',
+	'skyLighting',
+	'scaleFactor',
+	'launchSequence',
+	'shell',
+	'hideControls',
+	'hideToast',
+	'longExposure',
+	'textFirework',
+	'textRandomColor',
+	'textDisplayCount',
+	'textRandomPosition',
+	'textRandomPositionShuffle',
+	'textSingleCluster',
+	'autoLaunch',
+	'hideCursor',
+	'autoHideCursor',
+];
+
+/**
  * 应用状态存储单例对象。
  * 管理应用的全部运行时状态和用户配置，提供状态变更通知和持久化能力。
  * 初始化时根据设备类型设置默认配置，非头部嵌入模式下自动加载持久化数据。
@@ -240,33 +265,19 @@ const store: Store = {
 
 	/**
 	 * 将当前配置持久化到 localStorage。
+	 * 自动从 PERSIST_CONFIG_KEYS 提取需要持久化的字段，避免手动逐字段列出。
 	 */
 	persist() {
 		const config = this.state.config;
+		const data: Record<string, unknown> = {};
+		for (const key of PERSIST_CONFIG_KEYS) {
+			data[key] = config[key];
+		}
 		localStorage.setItem(
 			'cm_fireworks_data',
 			JSON.stringify({
 				schemaVersion: '1.7',
-				data: {
-					quality: config.quality,
-					size: config.size,
-					skyLighting: config.skyLighting,
-					scaleFactor: config.scaleFactor,
-					launchSequence: config.launchSequence,
-					shell: config.shell,
-					hideControls: config.hideControls,
-					hideToast: config.hideToast,
-					longExposure: config.longExposure,
-					textFirework: config.textFirework,
-					textRandomColor: config.textRandomColor,
-					textDisplayCount: config.textDisplayCount,
-					textRandomPosition: config.textRandomPosition,
-					textRandomPositionShuffle: config.textRandomPositionShuffle,
-					textSingleCluster: config.textSingleCluster,
-					autoLaunch: config.autoLaunch,
-					hideCursor: config.hideCursor,
-					autoHideCursor: config.autoHideCursor,
-				},
+				data: data as StoreSchema['data'],
 			})
 		);
 	},

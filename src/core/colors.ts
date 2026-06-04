@@ -52,6 +52,21 @@ const _customColorRegistry: Record<string, string> = {};
  */
 const _customColorTuples: Record<string, ColorTuple> = {};
 
+// ========================
+// 颜色代码缓存
+// ========================
+
+/** 缓存的所有颜色代码列表（系统内置 + 自定义注册） */
+let _cachedAllColorCodes: string[] | null = null;
+/** 缓存的所有颜色代码列表（含不可见标识） */
+let _cachedAllColorCodesWithInvis: string[] | null = null;
+
+/** 使颜色代码缓存失效，下次访问时重新计算 */
+function _invalidateColorCache(): void {
+	_cachedAllColorCodes = null;
+	_cachedAllColorCodesWithInvis = null;
+}
+
 /**
  * 将十六进制颜色代码解析为 RGB 元组。
  * @param {string} hex - 十六进制颜色代码（如 '#ff0043'）
@@ -75,6 +90,7 @@ function registerCustomColorForRendering(name: string, hex: string): void {
 	if (!_customColorRegistry[name]) {
 		_customColorRegistry[name] = hex;
 		_customColorTuples[hex] = _parseHexToTuple(hex);
+		_invalidateColorCache();
 	}
 }
 
@@ -90,24 +106,30 @@ function registerCustomColorsForRendering(colors: Record<string, string>): void 
 
 /**
  * 获取所有已注册的颜色代码（系统内置 + 自定义注册）。
+ * 结果会被缓存，仅在自定义颜色注册变更时重新计算。
  * @returns {string[]} 颜色代码列表
  */
 function getAllColorCodes(): string[] {
+	if (_cachedAllColorCodes) return _cachedAllColorCodes;
 	const allCodes = [...COLOR_CODES];
 	for (const hex of Object.values(_customColorRegistry)) {
 		if (!allCodes.includes(hex)) {
 			allCodes.push(hex);
 		}
 	}
+	_cachedAllColorCodes = allCodes;
 	return allCodes;
 }
 
 /**
  * 获取所有已注册的颜色代码（含不可见标识）。
+ * 结果会被缓存，仅在自定义颜色注册变更时重新计算。
  * @returns {string[]} 颜色代码列表（含 INVISIBLE）
  */
 function getAllColorCodesWithInvis(): string[] {
-	return [...getAllColorCodes(), INVISIBLE];
+	if (_cachedAllColorCodesWithInvis) return _cachedAllColorCodesWithInvis;
+	_cachedAllColorCodesWithInvis = [...getAllColorCodes(), INVISIBLE];
+	return _cachedAllColorCodesWithInvis;
 }
 
 /**

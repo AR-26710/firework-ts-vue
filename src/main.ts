@@ -19,62 +19,48 @@ import type { AppInstance } from '@/ui/app-instance';
 import '@/ui/icons';
 
 /**
- * 应用初始化函数。执行以下操作：
- * 1. 创建并挂载 Vue 应用
- * 2. 初始化游戏循环
- * 3. 隐藏加载提示（通过 Vue 响应式）
- * 4. 启动烟花模拟
- * 5. 触发配置更新回调
+ * 创建并挂载 Vue 应用，返回应用实例。
+ * @returns Vue 应用实例
  */
-function init() {
+function createAndMountApp(): AppInstance {
 	initializePlugins();
-
 	const app = createApp(App);
 	app.use(i18n);
 	const appEl = document.getElementById('app')!;
-	const vm = app.mount(appEl) as unknown as AppInstance;
+	return app.mount(appEl) as unknown as AppInstance;
+}
 
-	registerToastFn(vm.showToast);
-
-	// 先渲染舞台（包含 canvas），再初始化游戏循环
-	vm.setReady();
-	nextTick(() => {
-		initGameLoop(vm);
-		togglePause(false);
-		configDidUpdate();
-	});
+/**
+ * 启动游戏循环并触发初始状态更新。
+ * @param vm - Vue 应用实例
+ */
+function startApp(vm: AppInstance) {
+	initGameLoop(vm);
+	togglePause(false);
+	configDidUpdate();
 }
 
 // 头部嵌入模式下直接初始化，普通模式下先预加载音频再初始化
 if (IS_HEADER) {
-	init();
+	const vm = createAndMountApp();
+	registerToastFn(vm.showToast);
+	vm.setReady();
+	nextTick(() => startApp(vm));
 } else {
-	initializePlugins();
-
-	const app = createApp(App);
-	app.use(i18n);
-	const appEl = document.getElementById('app')!;
-	const vm = app.mount(appEl) as unknown as AppInstance;
+	const vm = createAndMountApp();
 	registerToastFn(vm.showToast);
 	vm.setLoadingStatus('loading.lightFuse');
 
 	setTimeout(() => {
+		const onReady = () => startApp(vm);
 		soundManager.preload().then(
 			() => {
 				vm.requestReady();
-				vm.onReady(() => {
-					initGameLoop(vm);
-					togglePause(false);
-					configDidUpdate();
-				});
+				vm.onReady(onReady);
 			},
 			(reason) => {
 				vm.requestReady();
-				vm.onReady(() => {
-					initGameLoop(vm);
-					togglePause(false);
-					configDidUpdate();
-				});
+				vm.onReady(onReady);
 				return Promise.reject(reason);
 			}
 		);

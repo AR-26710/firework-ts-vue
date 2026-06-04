@@ -45,14 +45,9 @@ function selectLanguage(locale: 'zh-CN' | 'en') {
 
 <style scoped lang="scss">
 @use '@/styles/variables' as *;
+@use '@/styles/settings-panel' as *;
 
-.tab-panel {
-	border: 1px solid $border-default;
-	border-radius: $radius-xl;
-	background-color: $surface-glass;
-	overflow: hidden;
-	padding: $space-1 0 $space-2;
-}
+@include settings-panel;
 
 .language-selector {
 	display: flex;

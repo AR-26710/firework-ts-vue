@@ -5,6 +5,7 @@
  */
 
 import { getMainStage } from '@/core/stages';
+import type { PointerEventData } from '@/core/stage';
 import { togglePause, toggleSound, toggleSetting } from '@/store/actions';
 import { isRunning } from '@/store/selectors';
 import { launchShellFromConfig } from '@/simulation/shell-launch';
@@ -13,19 +14,10 @@ import { store } from '@/store/store';
 import { handlePointerMoveForCursor, initCursorManager } from '@/input/cursor-manager';
 
 /**
- * 类指针事件接口，抽象了指针事件的核心属性。
+ * 指针事件数据类型，复用 Stage 模块的 PointerEventData 接口。
  * 用于统一处理来自不同输入源（鼠标、触摸等）的指针事件。
  */
-interface PointerEventLike {
-	/** 事件类型，如 'pointerstart'、'pointerend'、'pointermove' */
-	type: string;
-	/** 指针的 X 坐标 */
-	x: number;
-	/** 指针的 Y 坐标 */
-	y: number;
-	/** 指针是否在画布区域内 */
-	onCanvas?: boolean;
-}
+type PointerEventLike = PointerEventData;
 
 /** 当前活跃的指针数量，用于多点触控追踪 */
 let _activePointerCount = 0;

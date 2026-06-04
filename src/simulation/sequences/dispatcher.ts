@@ -11,7 +11,7 @@ import { isHeader } from '@/core/constants';
 import { finaleSelector, launchSequenceSelector, shellSizeSelector } from '@/store/selectors';
 import { Shell } from '../shells';
 import { getShellFactory } from '../shell-registry';
-import { seqRandomFastShell, seqTwoRandom } from '../shell-configs';
+import { seqRandomFastShell, seqTwoRandom } from './builtin';
 import {
 	getSequenceNames,
 	executeSequence,
@@ -22,6 +22,15 @@ import {
 let isFirstSeq = true;
 const finaleCount = 32;
 let currentFinaleCount = 0;
+
+/**
+ * 重置调度器状态，将首次序列标记和终幕计数器恢复到初始值。
+ * 用于测试场景或热重载时清理状态。
+ */
+function resetDispatcher(): void {
+	isFirstSeq = true;
+	currentFinaleCount = 0;
+}
 
 /**
  * 主序列调度器。根据当前状态和选择的发射序列执行合适的烟花发射序列。
@@ -84,4 +93,4 @@ function startSequence(): number {
 	return 0;
 }
 
-export { startSequence, getSequenceNames as launchSequenceNames };
+export { startSequence, resetDispatcher, getSequenceNames as launchSequenceNames };

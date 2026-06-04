@@ -119,7 +119,7 @@ const Ticker = (function TickerFactory() {
  * 指针事件数据接口，描述舞台上的指针事件信息。
  * @interface PointerEventData
  */
-interface PointerEventData {
+export interface PointerEventData {
 	/** 事件类型，如 'start'、'move'、'end' */
 	type: string;
 	/** 指针在画布上的 X 坐标（逻辑像素） */
@@ -145,6 +145,40 @@ interface StageListeners {
 	pointerend: ((evt: PointerEventData) => void)[];
 	/** 最近一次指针位置记录，用于触摸结束事件时获取最终坐标 */
 	lastPointerPos: { x: number; y: number };
+}
+
+/**
+ * 舞台事件映射接口，将事件名称映射到对应的回调函数类型。
+ * 用于 addEventListener 的类型安全泛型约束。
+ * @interface StageEventMap
+ */
+interface StageEventMap {
+	/** 帧更新事件，回调接收帧时间和帧补偿比值 */
+	ticker: TickerCallback;
+	/** 画布尺寸变化事件，回调无参数 */
+	resize: () => void;
+	/** 指针按下事件，回调接收 PointerEventData */
+	pointerstart: (evt: PointerEventData) => void;
+	/** 指针移动事件，回调接收 PointerEventData */
+	pointermove: (evt: PointerEventData) => void;
+	/** 指针抬起事件，回调接收 PointerEventData */
+	pointerend: (evt: PointerEventData) => void;
+}
+
+/**
+ * 舞台事件数据映射接口，将事件名称映射到对应的事件数据类型。
+ * 用于 dispatchEvent 的类型安全泛型约束。
+ * @interface StageEventDataMap
+ */
+interface StageEventDataMap {
+	/** 画布尺寸变化事件，无事件数据 */
+	resize: void;
+	/** 指针按下事件 */
+	pointerstart: PointerEventData;
+	/** 指针移动事件 */
+	pointermove: PointerEventData;
+	/** 指针抬起事件 */
+	pointerend: PointerEventData;
 }
 
 /**
@@ -236,15 +270,16 @@ export class Stage {
 	 * 指针事件接收 PointerEventData 参数，resize 事件无参数。
 	 * @throws {Error} 当事件名称无效时抛出错误。
 	 */
-	addEventListener(event: string, handler: (evt?: any) => void) {
-		try {
-			if (event === 'ticker') {
-				Ticker.addListener(handler);
+	addEventListener<K extends keyof StageEventMap>(event: K, handler: StageEventMap[K]) {
+		if (event === 'ticker') {
+			Ticker.addListener(handler as TickerCallback);
+		} else {
+			const listeners = this._listeners[event as keyof StageListeners];
+			if (Array.isArray(listeners)) {
+				(listeners as Function[]).push(handler as Function);
 			} else {
-				(this._listeners as any)[event].push(handler);
+				throw new Error('Invalid Event');
 			}
-		} catch {
-			throw new Error('Invalid Event');
 		}
 	}
 
@@ -255,10 +290,10 @@ export class Stage {
 	 * @param {any} [val] - 传递给监听器的事件数据。
 	 * @throws {Error} 当事件名称无效（无对应监听器列表）时抛出错误。
 	 */
-	dispatchEvent(event: string, val?: any) {
-		const listeners = (this._listeners as any)[event];
-		if (listeners) {
-			listeners.forEach((listener: Function) => listener.call(this, val));
+	dispatchEvent<K extends keyof StageEventDataMap>(event: K, val?: StageEventDataMap[K]) {
+		const listeners = this._listeners[event as keyof StageListeners];
+		if (Array.isArray(listeners)) {
+			(listeners as Function[]).forEach((listener: Function) => listener.call(this, val));
 		} else {
 			throw new Error('Invalid Event');
 		}
@@ -310,7 +345,7 @@ export class Stage {
 	 * @param {number} x - 指针在画布上的 X 坐标（逻辑像素）。
 	 * @param {number} y - 指针在画布上的 Y 坐标（逻辑像素）。
 	 */
-	pointerEvent(type: string, x: number, y: number) {
+	pointerEvent(type: 'start' | 'move' | 'end', x: number, y: number) {
 		const evt: PointerEventData = {
 			type: type,
 			x: x,
@@ -319,7 +354,7 @@ export class Stage {
 
 		evt.onCanvas = x >= 0 && x <= this.width && y >= 0 && y <= this.height;
 
-		this.dispatchEvent('pointer' + type, evt);
+		this.dispatchEvent(('pointer' + type) as keyof StageEventDataMap, evt);
 	}
 
 	/** 上次触摸事件的时间戳，用于在鼠标处理器中过滤触摸事件后的误触发 */
@@ -345,7 +380,7 @@ export class Stage {
 			return;
 		}
 
-		let type = 'start';
+		let type: 'start' | 'move' | 'end' = 'start';
 		if (evt.type === 'mousemove') {
 			type = 'move';
 		} else if (evt.type === 'mouseup') {
@@ -377,7 +412,7 @@ export class Stage {
 			return;
 		}
 
-		let type = 'start';
+		let type: 'start' | 'move' | 'end' = 'start';
 		if (evt.type === 'touchmove') {
 			type = 'move';
 		} else if (evt.type === 'touchend') {

@@ -108,28 +108,7 @@ function openHelp(topic: string) {
 
 <style scoped lang="scss">
 @use '@/styles/variables' as *;
+@use '@/styles/settings-panel' as *;
 
-.tab-panel {
-	border: 1px solid $border-default;
-	border-radius: $radius-xl;
-	background-color: $surface-glass;
-	overflow: hidden;
-	padding: $space-1 0 $space-2;
-}
-
-.option-group {
-	&:not(:last-child) {
-		border-bottom: 1px solid $border-subtle;
-		margin-bottom: $space-2;
-		padding-bottom: $space-2;
-	}
-
-	&__header {
-		padding: $space-2 $space-4 $space-1;
-		font-size: $font-size-sm;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		opacity: $opacity-dim;
-	}
-}
+@include settings-panel;
 </style>
