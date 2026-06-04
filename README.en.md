@@ -28,7 +28,7 @@ Supports 14 shell types + random mode, using a plugin architecture. Adding a new
 | Peony | Classic spherical explosion, high-density solid sphere, no trail, pure color |
 | Brocade | Dense golden heavy glitter + long life, brocade-like effect, optional pistil/secondary color |
 
-For guidance on adding new shell types, see [`plugins/DEVELOPMENT.md`](src/simulation/plugins/DEVELOPMENT.md).
+For guidance on adding new shell types, see [`plugins/DEVELOPMENT.en.md`](src/simulation/plugins/DEVELOPMENT.en.md).
 
 ### Launch Sequences
 
@@ -45,7 +45,7 @@ Uses a plugin architecture. Adding a new sequence only requires adding a file in
 | Wave | Sequential launch from one side to the other, sine height distribution (desktop 7, mobile 4) | 0.12 | — |
 | Cross Burst | Five shells in a cross pattern, center large + four directional small | 0.15 | — |
 
-For guidance on adding new launch sequences, see [`plugins/DEVELOPMENT.md`](src/simulation/plugins/DEVELOPMENT.md).
+For guidance on adding new launch sequences, see [`plugins/DEVELOPMENT.en.md`](src/simulation/plugins/DEVELOPMENT.en.md).
 
 ### Text Fireworks
 
