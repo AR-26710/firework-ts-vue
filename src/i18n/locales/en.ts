@@ -65,6 +65,7 @@ export default {
 		Brocade: 'Brocade',
 		Peony: 'Peony',
 		Kamuro: 'Kamuro',
+		Neon: 'Neon',
 	},
 	launchSequenceLabels: {
 		Random: 'Random',

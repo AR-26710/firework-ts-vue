@@ -3,7 +3,15 @@
  * 烟花弹核心模块，提供 Shell 类实现烟花弹的升空与爆炸逻辑。
  */
 
-import { COLOR, INVISIBLE, PI_2, randomColor } from '@/core/constants';
+import {
+	COLOR,
+	INVISIBLE,
+	PI_2,
+	randomColor,
+	registerCustomColorsForRendering,
+	createColorPool,
+} from '@/core/constants';
+import type { ColorPool } from '@/core/constants';
 import { isHighQuality, quality, stageW, stageH } from '@/core/state';
 import { Star } from './particles/star';
 import { BurstFlash } from './particles/burst-flash';
@@ -67,6 +75,9 @@ class Shell {
 	strobeColor: string | null;
 	comet: StarInstance | undefined;
 	textString: string;
+	customColors: Record<string, string> | undefined;
+	useSystemColors: boolean;
+	colorPool: ColorPool | undefined;
 
 	constructor(options: ShellConfig) {
 		this.shellSize = options.shellSize;
@@ -91,6 +102,11 @@ class Shell {
 		this.strobeColor = options.strobeColor || null;
 		this.comet = options.comet;
 		this.textString = options.textString || '';
+		this.customColors = options.customColors;
+		this.useSystemColors = options.useSystemColors !== false;
+
+		// 根据配置创建颜色池
+		this.colorPool = createColorPool(this.customColors, this.useSystemColors);
 
 		if (!options.starCount) {
 			const density = this.starDensity;
@@ -451,6 +467,11 @@ class Shell {
 	}
 
 	burst(x: number, y: number) {
+		// 注册自定义颜色到全局渲染注册表，确保渲染器能识别
+		if (this.customColors) {
+			registerCustomColorsForRendering(this.customColors);
+		}
+
 		const speed = this.spreadSize / 96;
 		const glitterConfig = this.getGlitterConfig();
 		const onDeath = this.getDeathCallback();

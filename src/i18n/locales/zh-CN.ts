@@ -64,6 +64,7 @@ export default {
 		Brocade: '锦冠',
 		Peony: '牡丹',
 		Kamuro: '冠',
+		Neon: '霓虹',
 	},
 	launchSequenceLabels: {
 		Random: '随机',

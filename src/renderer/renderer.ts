@@ -6,7 +6,7 @@
  * mainStage 用于绘制当前帧的明亮粒子。
  */
 
-import { COLOR_CODES, COLOR_TUPLES, COLOR, SKY_LIGHT_NONE } from '@/core/constants';
+import { COLOR, SKY_LIGHT_NONE, getAllColorCodes, getColorTuple } from '@/core/constants';
 import { simSpeed, stageW, stageH, isLowQuality } from '@/core/state';
 import { getMainStage, getTrailsStage } from '@/core/stages';
 import { store } from '@/store/store';
@@ -34,9 +34,9 @@ function colorSky(speed: number) {
 	targetSkyColor.r = 0;
 	targetSkyColor.g = 0;
 	targetSkyColor.b = 0;
-	COLOR_CODES.forEach((color) => {
-		const tuple = COLOR_TUPLES[color];
-		const count = Star.active[color].length;
+	getAllColorCodes().forEach((color) => {
+		const tuple = getColorTuple(color);
+		const count = Star.active[color]?.length || 0;
 		totalStarCount += count;
 		targetSkyColor.r += tuple.r * count;
 		targetSkyColor.g += tuple.g * count;
@@ -121,7 +121,7 @@ export function render(speed: number, speedBarOpacity: number) {
 	mainCtx.strokeStyle = '#fff';
 	mainCtx.lineWidth = 1;
 	mainCtx.beginPath();
-	COLOR_CODES.forEach((color) => {
+	getAllColorCodes().forEach((color) => {
 		const stars = Star.active[color];
 		trailsCtx.strokeStyle = color;
 		trailsCtx.beginPath();
@@ -139,7 +139,7 @@ export function render(speed: number, speedBarOpacity: number) {
 
 	trailsCtx.lineWidth = Spark.drawWidth;
 	trailsCtx.lineCap = 'butt';
-	COLOR_CODES.forEach((color) => {
+	getAllColorCodes().forEach((color) => {
 		const sparks = Spark.active[color];
 		trailsCtx.strokeStyle = color;
 		trailsCtx.beginPath();

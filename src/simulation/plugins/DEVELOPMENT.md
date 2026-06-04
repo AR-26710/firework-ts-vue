@@ -140,6 +140,8 @@ export default {
 | `horsetail` | `boolean` | ❌ | `false` | 星体跟随彗星轨迹下落 |
 | `strobe` | `boolean` | ❌ | `false` | 启用频闪效果 |
 | `strobeColor` | `string \| null` | ❌ | `null` | 频闪颜色 |
+| `customColors` | `Record<string, string>` | ❌ | — | 自定义颜色映射表，仅作用于当前烟花类型 |
+| `useSystemColors` | `boolean` | ❌ | `true` | 是否使用系统内置颜色。设为 `false` 时仅使用 `customColors` |
 
 ### 颜色系统
 
@@ -170,8 +172,96 @@ whiteOrGold()                          // 50% 金色 / 50% 白色
 花心颜色工具（从 `../shell-plugin-helper` 导入）：
 
 ```ts
-makePistilColor(shellColor)  // 根据主颜色自动生成花心颜色
+makePistilColor(shellColor)        // 根据主颜色自动生成花心颜色
+makePistilColor(shellColor, pool)  // 支持自定义颜色池
 ```
+
+### 自定义颜色系统
+
+支持在新建烟花类型时定义自定义颜色，无需修改 `@/core/constants` 目录下的文件。
+
+**核心概念**：
+
+- `customColors`：自定义颜色映射表，格式为 `{ 颜色名: 十六进制代码 }`，仅作用于当前烟花类型
+- `useSystemColors`：布尔值，控制是否使用系统内置颜色（默认 `true`）
+- 颜色优先级：启用系统颜色时，自定义颜色与系统颜色合并使用；禁用时，仅使用自定义颜色
+
+**颜色池工具函数**（从 `@/core/constants` 导入）：
+
+```ts
+import { createColorPool } from '@/core/constants';
+
+// 创建仅包含自定义颜色的颜色池（禁用系统颜色）
+const pool = createColorPool(
+	{ Pink: '#ff69b4', Cyan: '#00ffff', Lime: '#39ff14' },
+	false  // useSystemColors = false
+);
+
+// 创建合并系统颜色和自定义颜色的颜色池
+const pool2 = createColorPool({ Coral: '#ff6b6b' }, true);  // 默认值，可省略
+
+// 在颜色池中随机选取颜色
+const color = randomColor(undefined, pool.codes);
+const color2 = randomColor({ limitWhite: true }, pool.codes);
+```
+
+**自定义颜色示例**（参见 `neon.ts`）：
+
+```ts
+import type { FireworkPlugin } from '../types';
+import { randomColor, createColorPool } from '@/core/constants';
+import type { ShellConfig } from '../../shell-utils';
+import { makePistilColor } from '../shell-plugin-helper';
+
+const NEON_COLORS = {
+	Pink: '#ff69b4',
+	Cyan: '#00ffff',
+	Lime: '#39ff14',
+	Orange: '#ff6600',
+	Magenta: '#ff00ff',
+	Yellow: '#ffff00',
+};
+
+const neonShell = (size: number = 1): ShellConfig => {
+	const pool = createColorPool(NEON_COLORS, false);
+
+	const singleColor = Math.random() < 0.6;
+	const color = singleColor
+		? randomColor({ limitWhite: true }, pool.codes)
+		: [randomColor(undefined, pool.codes), randomColor({ notSame: true }, pool.codes)];
+
+	const pistil = singleColor && Math.random() < 0.5;
+	const pistilColor = pistil
+		? makePistilColor(typeof color === 'string' ? color : color[0], pool)
+		: undefined;
+
+	return {
+		shellSize: size,
+		spreadSize: 280 + size * 100,
+		starLife: 850 + size * 200,
+		starDensity: 1.2,
+		color,
+		glitter: Math.random() < 0.4 ? 'light' : '',
+		glitterColor: '#ffffff',
+		pistil,
+		pistilColor: pistilColor || false,
+		streamers: Math.random() < 0.25,
+		customColors: NEON_COLORS,
+		useSystemColors: false,
+	};
+};
+
+export default {
+	id: 'shell-neon',
+	description: '霓虹烟花类型（仅使用自定义颜色）',
+	shells: [{ name: 'Neon', factory: neonShell }],
+} satisfies FireworkPlugin;
+```
+
+**注意事项**：
+- 自定义颜色会在烟花爆炸时自动注册到全局渲染表，不影响其他烟花类型
+- 如果不设置 `useSystemColors: false`，自定义颜色将与系统内置颜色合并使用
+- `makePistilColor` 和 `whiteOrGold` 支持传入 `ColorPool` 参数以适配自定义颜色
 
 ### 闪光类型
 

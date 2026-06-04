@@ -1,7 +1,7 @@
 /**
  * @module core/constants
  * @description 烟花模拟项目的全局常量模块。
- * 包含设备检测、物理参数、画质等级、天空光照、颜色系统及颜色工具函数等核心常量定义。
+ * 包含设备检测、物理参数、画质等级、天空光照、颜色常量等核心常量定义。
  */
 
 /**
@@ -191,18 +191,22 @@ const COLOR_CODE_INDEXES: Record<string, number> = COLOR_CODES_W_INVIS.reduce(
 	{} as Record<string, number>
 );
 
-/**
- * RGB 颜色元组接口，表示一个颜色的红、绿、蓝通道值。
- * @interface ColorTuple
- * @property {number} r - 红色通道值（0-255）
- * @property {number} g - 绿色通道值（0-255）
- * @property {number} b - 蓝色通道值（0-255）
- */
-interface ColorTuple {
-	r: number;
-	g: number;
-	b: number;
-}
+// ========================
+// 颜色系统（从 colors 模块导入）
+// ========================
+
+import type { ColorTuple, ColorPool } from './colors';
+import {
+	registerCustomColorForRendering,
+	registerCustomColorsForRendering,
+	getAllColorCodes,
+	getAllColorCodesWithInvis,
+	getColorTuple,
+	createColorPool,
+	randomColorSimple,
+	randomColor,
+	whiteOrGold,
+} from './colors';
 
 /**
  * 颜色十六进制代码到 RGB 元组的映射表，由 {@link COLOR_CODES} 派生。
@@ -220,82 +224,6 @@ COLOR_CODES.forEach((hex) => {
 });
 
 /**
- * 从颜色代码列表中随机选取一个颜色。
- * @returns {string} 随机颜色的十六进制代码
- * @example
- * randomColorSimple() // '#14fc56'
- */
-function randomColorSimple(): string {
-	return COLOR_CODES[(Math.random() * COLOR_CODES.length) | 0];
-}
-
-let lastColor: string | undefined;
-
-/**
- * 随机颜色选项接口。
- * @interface RandomColorOptions
- * @property {boolean} [notSame] - 是否避免与上次选取的颜色相同
- * @property {string} [notColor] - 需要排除的特定颜色代码
- * @property {boolean} [limitWhite] - 是否限制白色出现的概率（白色有 60% 概率被重新随机）
- */
-interface RandomColorOptions {
-	notSame?: boolean;
-	notColor?: string;
-	limitWhite?: boolean;
-}
-
-/**
- * 根据选项生成随机颜色代码。
- * 支持避免重复颜色、排除特定颜色以及限制白色出现概率。
- * @param {RandomColorOptions} [options] - 随机颜色选项
- * @param {boolean} [options.notSame] - 是否避免与上次选取的颜色相同
- * @param {string} [options.notColor] - 需要排除的特定颜色代码
- * @param {boolean} [options.limitWhite] - 是否限制白色出现的概率
- * @returns {string} 随机颜色的十六进制代码
- * @example
- * randomColor() // '#e60aff'
- * randomColor({ notSame: true }) // 保证不与上次相同
- * randomColor({ notColor: '#ffffff', limitWhite: true })
- */
-function randomColor(options?: RandomColorOptions): string {
-	const notSame = options && options.notSame;
-	const notColor = options && options.notColor;
-	const limitWhite = options && options.limitWhite;
-	let color = randomColorSimple();
-
-	if (limitWhite && color === COLOR.White && Math.random() < 0.6) {
-		color = randomColorSimple();
-	}
-
-	if (notSame) {
-		let attempts = 0;
-		while (color === lastColor && attempts < COLOR_CODES.length) {
-			color = randomColorSimple();
-			attempts++;
-		}
-	} else if (notColor) {
-		let attempts = 0;
-		while (color === notColor && attempts < COLOR_CODES.length) {
-			color = randomColorSimple();
-			attempts++;
-		}
-	}
-
-	lastColor = color;
-	return color;
-}
-
-/**
- * 随机返回金色或白色，各 50% 概率。
- * @returns {string} 金色或白色的十六进制代码
- * @example
- * whiteOrGold() // '#ffbf36' 或 '#ffffff'
- */
-function whiteOrGold(): string {
-	return Math.random() < 0.5 ? COLOR.Gold : COLOR.White;
-}
-
-/**
  * 根据当前设备类型获取默认缩放因子。
  * - 移动设备返回 0.9；
  * - 横幅模式返回 0.75；
@@ -309,6 +237,8 @@ function getDefaultScaleFactor() {
 	if (IS_HEADER) return 0.75;
 	return 1;
 }
+
+export type { ColorTuple, ColorPool };
 
 export {
 	IS_MOBILE,
@@ -340,4 +270,10 @@ export {
 	randomColorSimple,
 	randomColor,
 	whiteOrGold,
+	registerCustomColorForRendering,
+	registerCustomColorsForRendering,
+	getAllColorCodes,
+	getAllColorCodesWithInvis,
+	getColorTuple,
+	createColorPool,
 };

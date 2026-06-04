@@ -5,7 +5,7 @@
  * 并在更新完成后调用渲染函数进行绘制。
  */
 
-import { GRAVITY, INVISIBLE, PI_2, COLOR_CODES_W_INVIS } from '@/core/constants';
+import { GRAVITY, INVISIBLE, PI_2, getAllColorCodesWithInvis } from '@/core/constants';
 import { simSpeed } from '@/core/state';
 import { store } from '@/store/store';
 import { isRunning } from '@/store/selectors';
@@ -84,7 +84,7 @@ export function update(frameTime: number, lag: number) {
 	const starDragHeavy = 1 - (1 - Star.airDragHeavy) * speed;
 	const sparkDrag = 1 - (1 - Spark.airDrag) * speed;
 	const gAcc = (timeStep / 1000) * GRAVITY;
-	COLOR_CODES_W_INVIS.forEach((color) => {
+	getAllColorCodesWithInvis().forEach((color) => {
 		const stars = Star.active[color];
 		for (let i = stars.length - 1; i >= 0; i = i - 1) {
 			const star = stars[i];

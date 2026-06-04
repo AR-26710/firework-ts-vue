@@ -77,8 +77,9 @@ function createBurst(
 
 /**
  * 创建按颜色键分类的粒子集合。
- * 为每种颜色代码（包括不可见颜色）创建一个空数组，
- * 用于按颜色分组管理粒子实例，便于批量渲染。
+ * 使用 Proxy 动态处理未知颜色键，自动创建空数组。
+ * 为每种系统颜色代码（包括不可见颜色）预初始化空数组，
+ * 同时在运行时自动为自定义颜色创建数组。
  *
  * @returns 以颜色代码为键、粒子数组为值的集合对象
  */
@@ -87,7 +88,17 @@ function createParticleCollection(): Record<string, (StarInstance | SparkInstanc
 	COLOR_CODES_W_INVIS.forEach((color) => {
 		collection[color] = [];
 	});
-	return collection;
+	return new Proxy(collection, {
+		get(target, prop) {
+			if (typeof prop === 'string') {
+				if (!(prop in target)) {
+					target[prop] = [];
+				}
+				return target[prop];
+			}
+			return (target as Record<string | symbol, unknown>)[prop];
+		},
+	});
 }
 
 export { createParticleArc, createBurst, createParticleCollection };

@@ -5,17 +5,21 @@
  */
 
 import { COLOR, randomColor, whiteOrGold } from '@/core/constants';
+import type { ColorPool } from '@/core/constants';
 
 /**
  * 根据烟花弹主颜色生成花心颜色。
  * 当主颜色为白色或金色时，随机选择一个非主色的颜色；否则返回白色或金色。
  * @param shellColor - 烟花弹主颜色
+ * @param pool - 可选的颜色池，用于自定义颜色范围
  * @returns 花心颜色字符串
  */
-function makePistilColor(shellColor: string): string {
-	return shellColor === COLOR.White || shellColor === COLOR.Gold
-		? randomColor({ notColor: shellColor })
-		: whiteOrGold();
+function makePistilColor(shellColor: string, pool?: ColorPool): string {
+	const colorCodes = pool?.codes;
+	if (shellColor === COLOR.White || shellColor === COLOR.Gold) {
+		return randomColor({ notColor: shellColor }, colorCodes);
+	}
+	return whiteOrGold(pool);
 }
 
 export { makePistilColor };

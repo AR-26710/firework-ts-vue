@@ -23,7 +23,7 @@ describe('Plugin System Integration', () => {
 	});
 
 	describe('内置烟花类型插件', () => {
-		it('应注册所有 15 种内置烟花类型', () => {
+		it('应注册所有 16 种内置烟花类型', () => {
 			const names = getShellNames();
 			expect(names).toContain('Random');
 			expect(names).toContain('Brocade');
@@ -40,7 +40,7 @@ describe('Plugin System Integration', () => {
 			expect(names).toContain('Ring');
 			expect(names).toContain('Strobe');
 			expect(names).toContain('Willow');
-			expect(names.length).toBe(15);
+			expect(names.length).toBe(16);
 		});
 
 		it('Random 应排在首位', () => {
@@ -96,8 +96,8 @@ describe('Plugin System Integration', () => {
 
 	describe('插件管理器', () => {
 		it('应包含所有已注册的插件', () => {
-			// 15 个烟花类型插件 + 8 个序列插件 = 23 个
-			expect(pluginManager.size).toBe(23);
+			// 16 个烟花类型插件 + 8 个序列插件 = 24 个
+			expect(pluginManager.size).toBe(24);
 		});
 
 		it('所有插件状态应为 initialized', () => {

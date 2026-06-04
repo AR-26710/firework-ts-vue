@@ -140,6 +140,8 @@ export default {
 | `horsetail` | `boolean` | ❌ | `false` | Stars follow comet trajectory downward |
 | `strobe` | `boolean` | ❌ | `false` | Enable strobe flickering effect |
 | `strobeColor` | `string \| null` | ❌ | `null` | Strobe color |
+| `customColors` | `Record<string, string>` | ❌ | — | Custom color mapping, only affects this shell type |
+| `useSystemColors` | `boolean` | ❌ | `true` | Whether to use system built-in colors. Set to `false` to only use `customColors` |
 
 ### Color System
 
@@ -170,8 +172,96 @@ whiteOrGold()                          // 50% gold / 50% white
 Pistil color utility (import from `../shell-plugin-helper`):
 
 ```ts
-makePistilColor(shellColor)  // Auto-generate pistil color based on primary color
+makePistilColor(shellColor)        // Auto-generate pistil color based on primary color
+makePistilColor(shellColor, pool)  // Support custom color pool
 ```
+
+### Custom Color System
+
+Custom colors can be defined when creating new shell types without modifying files in `@/core/constants`.
+
+**Core Concepts**:
+
+- `customColors`: Custom color mapping in format `{ name: hex code }`, only affects the current shell type
+- `useSystemColors`: Boolean controlling whether to include system built-in colors (default `true`)
+- Color priority: when enabled, custom colors merge with system colors; when disabled, only custom colors are used
+
+**Color pool utility functions** (import from `@/core/constants`):
+
+```ts
+import { createColorPool } from '@/core/constants';
+
+// Create a pool with only custom colors (system colors disabled)
+const pool = createColorPool(
+	{ Pink: '#ff69b4', Cyan: '#00ffff', Lime: '#39ff14' },
+	false  // useSystemColors = false
+);
+
+// Create a pool merging system and custom colors
+const pool2 = createColorPool({ Coral: '#ff6b6b' }, true);  // default, can be omitted
+
+// Pick random colors from the pool
+const color = randomColor(undefined, pool.codes);
+const color2 = randomColor({ limitWhite: true }, pool.codes);
+```
+
+**Custom color example** (see `neon.ts`):
+
+```ts
+import type { FireworkPlugin } from '../types';
+import { randomColor, createColorPool } from '@/core/constants';
+import type { ShellConfig } from '../../shell-utils';
+import { makePistilColor } from '../shell-plugin-helper';
+
+const NEON_COLORS = {
+	Pink: '#ff69b4',
+	Cyan: '#00ffff',
+	Lime: '#39ff14',
+	Orange: '#ff6600',
+	Magenta: '#ff00ff',
+	Yellow: '#ffff00',
+};
+
+const neonShell = (size: number = 1): ShellConfig => {
+	const pool = createColorPool(NEON_COLORS, false);
+
+	const singleColor = Math.random() < 0.6;
+	const color = singleColor
+		? randomColor({ limitWhite: true }, pool.codes)
+		: [randomColor(undefined, pool.codes), randomColor({ notSame: true }, pool.codes)];
+
+	const pistil = singleColor && Math.random() < 0.5;
+	const pistilColor = pistil
+		? makePistilColor(typeof color === 'string' ? color : color[0], pool)
+		: undefined;
+
+	return {
+		shellSize: size,
+		spreadSize: 280 + size * 100,
+		starLife: 850 + size * 200,
+		starDensity: 1.2,
+		color,
+		glitter: Math.random() < 0.4 ? 'light' : '',
+		glitterColor: '#ffffff',
+		pistil,
+		pistilColor: pistilColor || false,
+		streamers: Math.random() < 0.25,
+		customColors: NEON_COLORS,
+		useSystemColors: false,
+	};
+};
+
+export default {
+	id: 'shell-neon',
+	description: 'Neon shell type (custom colors only)',
+	shells: [{ name: 'Neon', factory: neonShell }],
+} satisfies FireworkPlugin;
+```
+
+**Notes**:
+- Custom colors are automatically registered in the global rendering table when the shell bursts, without affecting other shell types
+- If `useSystemColors: false` is not set, custom colors will be merged with system built-in colors
+- `makePistilColor` and `whiteOrGold` support passing a `ColorPool` parameter to adapt to custom colors
 
 ### Glitter Types
 

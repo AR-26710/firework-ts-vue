@@ -55,6 +55,10 @@ interface ShellConfig {
 	comet?: import('./particles/types').StarInstance;
 	/** 文字烟花中要显示的字符 */
 	textString?: string;
+	/** 自定义颜色映射表，键为颜色名称，值为十六进制颜色代码。仅作用于当前烟花类型 */
+	customColors?: Record<string, string>;
+	/** 是否使用系统内置颜色，默认为 true。设为 false 时仅使用 customColors 中的颜色 */
+	useSystemColors?: boolean;
 }
 
 /**
